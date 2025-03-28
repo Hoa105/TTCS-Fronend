@@ -144,3 +144,114 @@
   display: flex; /* Làm cho đây là một container flex */
   align-items: center; /* Căn giữa các phần tử đăng nhập theo chiều dọc */
 }
+ 
+  /* Small screens (phones, up to 576px) */
+  @media (max-width: 576px) {
+    .navbar-top,
+    .navbar-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px; /* Add gap between items */
+    }
+  
+    .nav-links {
+      flex-direction: column;
+      margin-left: 0;
+      gap: 10px;
+    }
+  
+    .search-container{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-left: 0;
+      }
+    .right-section {
+        justify-content: flex-end;
+      /* flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      margin-left: 0; */
+    }
+  
+    .search-input {
+      width: 100%;
+    }
+  
+    .logo {
+      font-size: 30px;
+    }
+  
+    .search-login {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .navbar {
+      gap: 10px;
+    }
+  }
+  
+  /* Medium screens (tablets, 577px to 992px) */
+  @media (min-width: 577px) and (max-width: 992px) {
+    .navbar-top {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .right-section {
+        justify-content: flex-end; /* Maintain right alignment */
+      }
+  
+    .search-container {
+      width: 100%;
+      margin-left: 0;
+    }
+  
+    .search-input {
+      width: 100%;
+    }
+  
+    .nav-links {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+  
+    .logo {
+      font-size: 35px;
+    }
+  
+    .search-login {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .navbar {
+      gap: 10px;
+    }
+  }
+  
+  /* Large screens (desktops, 993px and up) */
+  @media (min-width: 993px) {
+    .navbar {
+      flex-direction: column;
+    }
+  
+    .navbar-top {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  
+    .search-container {
+      margin-left: 5%;
+    }
+  
+    .search-input {
+      width: 300px;
+    }
+    .navbar {
+      gap: 15px;
+    }
+  }
