@@ -1,16 +1,21 @@
 /* Navbar.css */
 
 .navbar {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Increased gap for better spacing */
-    padding: 15px 20px; /* Increased padding */
-    background-color: #f8f8f0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    position: sticky; /* Make the navbar sticky */
-    top: 0;
-    z-index: 100; /* Ensure it stays on top */
-  }
+  display: flex;
+  flex-direction: column; /* Hiển thị theo hàng ngang */
+  justify-content: space-between;
+  align-items: center; /* Căn giữa thay vì stretch */
+  gap: 10px; /* Giảm khoảng cách */
+  padding: 15px 20px;
+  background-color: #f8f8f0 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  box-sizing: border-box;
+  height: auto; /* Để navbar tự mở rộng */
+}
   
   .logo-section {
     display: flex;
@@ -24,16 +29,22 @@
     width: 100%;
   }
   
-  .search-login {
+  /* .search-login {
     display: flex;
     align-items: center;
     gap: 20px;
-  }
+  } */
   
   .navbar-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 120px;
+  }
+  .links{
+    display: flex;
+    gap: 120px; 
+    list-style: none;
   }
   
   .cart-link {
@@ -65,6 +76,8 @@
   .search-container {
     display: flex;
     align-items: center;
+    max-width: 300px;
+    width: 100%;;
     gap: 10px; /* Increased gap */
     margin-left: 5%;
     border-bottom: 1px solid #ccc; /* Added border */
@@ -82,18 +95,11 @@
   
   .search-input {
     padding: 10px; /* Reduced padding */
-    width: 300px;
+    width: 100%;
     border: none;
     font-size: 16px; /* Reduced font size */
-    background-color: #f8f8f0;
+    background: transparent;
     outline: none; /* Remove focus outline */
-  }
-  
-  .right-section {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    justify-content: flex-end;
   }
   
   .nav-links {
@@ -169,39 +175,41 @@
   
   /* Small screens (phones, up to 576px) */
   @media (max-width: 576px) {
-    .navbar-top,
-    .navbar-bottom {
-      flex-direction: column;
+    .navbar-top {
+      flex-direction: row;
       align-items: flex-start;
       gap: 10px; /* Add gap between items */
     }
   
+    .navbar-bottom{
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .links{
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 40px;
+    }
     .nav-links {
       flex-direction: column;
       margin-left: 0;
-      gap: 10px;
+      gap: 2px;
     }
   
-    .search-container{
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        margin-left: 0;
-      }
-    .right-section {
-        justify-content: flex-end;
-      /* flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-      margin-left: 0; */
+    .search-container{    
+      max-width: 200px;
+      margin-left: 0;
     }
   
     .search-input {
       width: 100%;
+      gap:2px;
     }
   
     .logo {
-      font-size: 30px;
+      font-size: 24px;
     }
   
     .search-login {
@@ -210,21 +218,21 @@
       gap: 10px;
     }
     .navbar {
-      gap: 10px;
+      gap: 5px;
     }
   }
   
   /* Medium screens (tablets, 577px to 992px) */
   @media (min-width: 577px) and (max-width: 992px) {
-    .navbar-top {
+    .navbar-bottom {
       flex-direction: column;
       align-items: flex-start;
       gap: 10px;
     }
 
-    .right-section {
+    /* .right-section {
         justify-content: flex-end; /* Maintain right alignment */
-      }
+      /* } */ */
   
     .search-container {
       width: 100%;
@@ -235,6 +243,12 @@
       width: 100%;
     }
   
+    .links{
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 50px;
+    }
+
     .nav-links {
       flex-wrap: wrap;
       justify-content: center;
