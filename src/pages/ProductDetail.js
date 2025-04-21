@@ -1,24 +1,27 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ProductContext } from "../context/ProductContext"; 
+import { useDispatch } from "react-redux";
+import { addToCart } from "../slices/productsSlice";
+import "./../assets/css/ProductDetail.css";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const { addToCart } = useContext(ProductContext); // Lấy hàm addToCart từ context
+  const dispatch = useDispatch();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`https://fakestoreapi.com/products/${id}`)
+    fetch(`http://localhost:8081/products/${id}`)
       .then((res) => res.json())
       .then((data) => {
+        const p = data.results;
         const formattedProduct = {
-          id: data.id,
-          name: data.title,
-          price: data.price,
-          image: data.image,
-          category: data.category,
-          description: data.description, // Lấy mô tả sản phẩm
+          id: p.id,
+          name: p.name,
+          price: parseFloat(p.price),
+          image: p.image,
+          category: p.category,
+          description: p.description,
         };
         setProduct(formattedProduct);
         setLoading(false);
@@ -33,12 +36,22 @@ const ProductDetail = () => {
   if (!product) return <p>Sản phẩm không tồn tại!</p>;
 
   return (
-    <div>
-      <h2>{product.name}</h2>
-      <img src={product.image} alt={product.name} style={{ width: "200px" }} />
-      <p>Giá: {product.price.toLocaleString()}₫</p>
-      <p>Mô tả: {product.description}</p>
-      <button onClick={() => addToCart(product)}>🛒 Thêm vào giỏ hàng</button>
+    <div className="product-detail-container">
+      <div className="product-image">
+        <img src={product.image} alt={product.name} />
+      </div>
+
+      <div className="product-info">
+        <h1 className="product-name">{product.name}</h1>
+        <p className="product-price">{product.price.toLocaleString()} ₫</p>
+        <p className="product-description">{product.description}</p>
+        <button
+          className="add-to-cart-btn"
+          onClick={() => dispatch(addToCart(product))}
+        >
+          🛒 Thêm vào giỏ hàng
+        </button>
+      </div>
     </div>
   );
 };

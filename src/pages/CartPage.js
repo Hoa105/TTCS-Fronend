@@ -1,36 +1,40 @@
-import React, { useContext } from "react";
-import { ProductContext } from "../context/ProductContext";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setCart } from "../slices/productsSlice";
 
 const CartPage = () => {
-  const { cart, setCart } = useContext(ProductContext);
+  const cart = useSelector((state) => state.products.cart);
+  const dispatch = useDispatch();
 
-  // Hàm tăng số lượng
   const increaseQuantity = (id) => {
-    setCart(cart.map(item => 
+    const newCart = cart.map((item) =>
       item.id === id ? { ...item, quantity: (item.quantity || 1) + 1 } : item
-    ));
+    );
+    dispatch(setCart(newCart));
   };
 
-  // Hàm giảm số lượng (không cho nhỏ hơn 1)
   const decreaseQuantity = (id) => {
-    setCart(cart.map(item => 
-      item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
-    ));
+    const newCart = cart
+      .map((item) =>
+        item.id === id ? { ...item, quantity: (item.quantity || 1) - 1 } : item
+      )
+      .filter((item) => item.quantity > 0); // tự động xóa nếu = 0
+    dispatch(setCart(newCart));
   };
 
-  // Hàm xóa một sản phẩm khỏi giỏ hàng
   const removeFromCart = (id) => {
-    setCart(cart.filter(item => item.id !== id));
+    dispatch(setCart(cart.filter((item) => item.id !== id)));
   };
 
-  // Hàm xóa toàn bộ giỏ hàng
   const clearCart = () => {
-    setCart([]);
+    dispatch(setCart([]));
   };
 
-  // Tính tổng tiền
   const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + item.price * (item.quantity || 1), 0);
+    return cart.reduce(
+      (total, item) => total + item.price * (item.quantity || 1),
+      0
+    );
   };
 
   return (
@@ -41,20 +45,57 @@ const CartPage = () => {
       ) : (
         <div>
           {cart.map((item) => (
-            <div key={item.id} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}>
-              <img src={item.image} alt={item.name} style={{ width: "50px", marginRight: "10px" }} />
-              <span>{item.name}</span> - <b>{item.price}₫</b>
+            <div
+              key={item.id}
+              style={{
+                border: "1px solid #ccc",
+                padding: "10px",
+                marginBottom: "10px",
+              }}
+            >
+              <img
+                src={item.image}
+                alt={item.name}
+                style={{ width: "100px", marginRight: "20px" }}
+              />
               <div>
-                <button onClick={() => decreaseQuantity(item.id)}>-</button>
-                <span> {item.quantity || 1} </span>
-                <button onClick={() => increaseQuantity(item.id)}>+</button>
-                <button onClick={() => removeFromCart(item.id)}>❌</button>
+                <span>{item.name}</span> - <b>{item.price.toLocaleString()}₫</b>
+                <div className="cart-actions">
+                  <button
+                    onClick={() => decreaseQuantity(item.id)}
+                    className="reset-button"
+                  >
+                    -
+                  </button>
+                  <span> {item.quantity || 1} </span>
+                  <button
+                    onClick={() => increaseQuantity(item.id)}
+                    className="reset-button"
+                  >
+                    +
+                  </button>
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="reset-button"
+                  >
+                    ❌ Xóa tất cả
+                  </button>
+                  <p>
+                    <b>
+                      {(item.price * (item.quantity || 1)).toLocaleString()}₫
+                    </b>
+                  </p>
+                </div>
               </div>
             </div>
           ))}
-          <h3>Tổng tiền: {getTotalPrice()}₫</h3>
-          <button onClick={clearCart} style={{ marginRight: "10px" }}>🗑 Xóa tất cả</button>
-          <button>💳 Thanh toán</button>
+          <h3>Tổng tiền: {getTotalPrice().toLocaleString()}₫</h3>
+          <button onClick={clearCart} style={{ marginRight: "10px" }}>
+            🗑 Xóa tất cả
+          </button>
+          <button onClick={() => (window.location.href = "/checkout")}>
+            💳 Thanh toán
+          </button>
         </div>
       )}
     </div>

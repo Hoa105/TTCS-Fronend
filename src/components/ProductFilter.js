@@ -1,48 +1,44 @@
-import React, { useContext } from "react";
-// import { useState } from "react";
-import { ProductContext } from "../context/ProductContext";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setMaterial, setPriceRange } from "../slices/productsSlice";
 
 const ProductFilter = () => {
-  // const [price, setPrice] = useState("100-500");
-  const {
-    // selectedCategory,
-    // setSelectedCategory,
-    selectedMaterial,
-    setSelectedMaterial,
-    priceRange, 
-    setPriceRange
-  } = useContext(ProductContext);
+  const dispatch = useDispatch();
+  const selectedMaterial = useSelector(
+    (state) => state.products.selectedMaterial
+  );
+
+  const handleMaterialChange = (e) => {
+    dispatch(setMaterial(e.target.value));
+  };
+
+  const handlePriceChange = (e) => {
+    const [min, max] = e.target.value.split("-").map(Number);
+    dispatch(setPriceRange([min, max]));
+  };
 
   return (
-    <div style={{ fontSize: "18px", lineHeight: "1.5" }}>
-      
-      {/* Bộ lọc theo chất liệu */}
+    <div style={{ fontSize: "18px", lineHeight: "3.0" }}>
       <div style={{ display: "inline-block", marginRight: "60px" }}>
         <label> Chọn chất liệu: </label>
-        <select value={selectedMaterial} onChange={(e) => setSelectedMaterial(e.target.value)}>
+        <select value={selectedMaterial} onChange={handleMaterialChange}>
           <option value="Tất cả">Tất cả</option>
-          <option value="Vàng">Vàng</option>
-          <option value="Bạc">Bạc</option>
-          <option value="Kim cương">Kim cương</option>
+          <option value="vàng">Vàng</option>
+          <option value="bạc">Bạc</option>
+          <option value="kim cương">Kim cương</option>
         </select>
       </div>
-      
-      {/* Bộ lọc theo giá */}
-      {/* Dropdown chọn khoảng giá */}
+
       <div style={{ display: "inline-block" }}>
         <label> Khoảng giá: </label>
-        <select onChange={(e) => {
-          const [min, max] = e.target.value.split("-").map(Number);
-          setPriceRange([min, max]);
-        }}>
-          <option value="0-2000">Tất cả</option>
-          <option value="0-500">0 - 500K</option>
-          <option value="500-1000">500K - 1 triệu</option>
-          <option value="1000-2000">1 triệu - 2 triệu</option>
+        <select onChange={handlePriceChange}>
+          <option value="0-200000000">Tất cả</option>
+          <option value="0-1000000">Dưới 1 triệu</option>
+          <option value="1000000-10000000">1 triệu - 10 triệu</option>
+          <option value="1000000-100000000">10 triệu - 100 triệu</option>
+          <option value="100000000-200000000">100 triệu - 200 triệu</option>
         </select>
       </div>
-      <p>Khoảng giá hiện tại: {priceRange[0]}K - {priceRange[1]}K</p>
-
     </div>
   );
 };

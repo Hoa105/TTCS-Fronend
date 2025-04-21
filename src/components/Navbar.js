@@ -1,45 +1,35 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ProductContext } from "../context/ProductContext";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import NavigationLinks from "./NavigationLinks";
-import "./Nav.css";
+import "./../assets/css/Nav.css";
 import logo from "../assets/images/logo.png";
+
+// 👉 import từ redux
+import { useDispatch } from "react-redux";
+import { setSearchQuery } from "../slices/productsSlice";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
-  const { setSearchQuery } = useContext(ProductContext);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
+  // Theo dõi location để cập nhật user (tránh cache lỗi)
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(storedUser || null);
+  }, [location.pathname]);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setSearchQuery(value); // ✅ Cập nhật ProductContext ngay khi nhập
+
+    dispatch(setSearchQuery(value)); // 👉 gửi query lên Redux
+
     if (value.trim() !== "") {
-      navigate("/search"); // ✅ Chỉ điều hướng khi có từ khóa
+      navigate("/search");
     }
-  };
-  //  ✅ Khi load lại trang, giữ nguyên searchQuery mà ko cần đăng nhập lại hoặ khi load lại trangss
-   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser);
-    }
-  }, []);
-
-  // Kiểm tra xem user đã đăng nhập chưa
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser);
-    }
-  }, []);
-
-  // Xử lý đăng xuất
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
   };
 
   return (
@@ -47,10 +37,8 @@ const Navbar = () => {
       <div className="navbar-top">
         <div className="logo-section">
           <h2 className="logo">
-            {/* <Link to="/" className="logo-link"> */}
-              <img src={logo} alt="Logo" className="logo-image" />
-              Velina Jewelry
-            {/* </Link> */}
+            <img src={logo} alt="Logo" className="logo-image" />
+            Velina Jewelry
           </h2>
         </div>
         <div className="search-container">
@@ -67,16 +55,23 @@ const Navbar = () => {
         </div>
         <ul className="nav-links">
           <li>
-            <Link to="/cart" className="cart-link">🛒 Giỏ hàng</Link>
+            <Link to="/cart" className="cart-link">
+              {" "}
+              🛒{" "}
+            </Link>
           </li>
           <li>
             {user ? (
               <div className="user-section">
-                <span>👤 {user.name}</span>
-                <button onClick={handleLogout} className="logout-button">Đăng xuất</button>
+                <Link to="/acount/user" className="user-link">
+                  👤 {user.username}
+                </Link>
               </div>
             ) : (
-              <Link to="/login" className="nav-links">🔑 Đăng nhập / Đăng ký</Link>
+              <Link to="/login" className="nav-links">
+                {" "}
+                👤{" "}
+              </Link>
             )}
           </li>
         </ul>
@@ -84,7 +79,7 @@ const Navbar = () => {
 
       <div className="navbar-bottom">
         <NavigationLinks />
-        <p style={{fontSize: "20px"}}> Liên hệ: 19000000</p>
+        {/* <p style={{ fontSize: "20px" }}> Liên hệ: 19000000</p> */}
       </div>
     </nav>
   );
