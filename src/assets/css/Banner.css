@@ -1,0 +1,25 @@
+/* src/components/Banner.css hoặc file CSS tương ứng */
+
+.img-banner {
+  width: 100%; /* Cho banner chiếm toàn bộ chiều rộng của container cha */
+  height: auto; /* Giữ tỷ lệ khung hình gốc của ảnh */
+  max-height: 400px; /* Giới hạn chiều cao tối đa (điều chỉnh nếu cần) */
+  object-fit: cover; /* Cắt ảnh để vừa với khung, giữ tỷ lệ, không bị méo */
+  display: block; /* Đảm bảo ảnh là block element để width/height hoạt động đúng */
+  margin-bottom: 2rem; /* Tạo khoảng cách dưới banner trước danh sách sản phẩm */
+  border-radius: 8px; /* Bo góc nhẹ cho mềm mại (tùy chọn) */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ nhẹ (tùy chọn) */
+}
+
+/* Có thể thêm CSS cho container của mỗi banner để căn giữa hoặc thêm padding */
+.banner-section {
+  margin-bottom: 3rem; /* Khoảng cách giữa các section banner */
+  padding: 0 1rem; /* Thêm padding ngang nếu cần */
+}
+
+.banner-section h1 {
+  text-align: center; /* Căn giữa tiêu đề */
+  margin-bottom: 1rem; /* Khoảng cách dưới tiêu đề */
+  font-size: 1.8rem; /* Cỡ chữ tiêu đề (điều chỉnh) */
+  color: #333; /* Màu chữ (điều chỉnh) */
+}

@@ -1,6 +1,6 @@
 // import styled from "styled-components";
 import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import logo from "../../assets/images/logo.png";
 import banner from "../../assets/images/Banner.jpg";
 
@@ -8,7 +8,6 @@ const Dashboard = () => {
   const auth = useSelector((state) => state.auth);
   const userFromStorage = JSON.parse(localStorage.getItem("user"));
   const isAdmin = auth?.isAdmin || userFromStorage?.isAdmin;
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,7 +30,7 @@ const Dashboard = () => {
             style={{ textDecoration: "none", color: "black" }}
           >
             <img src={logo} alt="Logo" className="logo-image" />
-            Velina Jewelry
+            Venila Jewelry
           </NavLink>
           <NavLink
             className={({ isActive }) =>

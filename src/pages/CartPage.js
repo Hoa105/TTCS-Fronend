@@ -1,40 +1,48 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setCart } from "../slices/productsSlice";
+import {
+  addToCart,
+  decreaseCart,
+  removeFromCart,
+  clearCart,
+} from "../slices/cartSilce";
 
 const CartPage = () => {
-  const cart = useSelector((state) => state.products.cart);
-  const dispatch = useDispatch();
+  const { cart, cartTotalAmount } = useSelector((state) => state.cart);
 
-  const increaseQuantity = (id) => {
-    const newCart = cart.map((item) =>
-      item.id === id ? { ...item, quantity: (item.quantity || 1) + 1 } : item
+  const user = JSON.parse(localStorage.getItem("user"));
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const increaseQuantity = (item) => {
+    console.log("increaseQuantity called with item:", item);
+    dispatch(
+      addToCart({
+        ...item, // Truyền dữ liệu item hiện có
+        quantity: 1, // Reducer addToCart sẽ xử lý việc tăng số lượng
+      })
     );
-    dispatch(setCart(newCart));
   };
 
   const decreaseQuantity = (id) => {
-    const newCart = cart
-      .map((item) =>
-        item.id === id ? { ...item, quantity: (item.quantity || 1) - 1 } : item
-      )
-      .filter((item) => item.quantity > 0); // tự động xóa nếu = 0
-    dispatch(setCart(newCart));
+    dispatch(decreaseCart({ id }));
   };
 
-  const removeFromCart = (id) => {
-    dispatch(setCart(cart.filter((item) => item.id !== id)));
+  const handleremoveFromCart = (id) => {
+    dispatch(removeFromCart({ id }));
   };
 
-  const clearCart = () => {
-    dispatch(setCart([]));
+  const handleclearCart = () => {
+    dispatch(clearCart());
   };
 
-  const getTotalPrice = () => {
-    return cart.reduce(
-      (total, item) => total + item.price * (item.quantity || 1),
-      0
-    );
+  const handleCheckout = () => {
+    if (user) {
+      navigate("/checkout");
+    } else {
+      navigate("/login");
+    }
   };
 
   return (
@@ -60,25 +68,29 @@ const CartPage = () => {
               />
               <div>
                 <span>{item.name}</span> - <b>{item.price.toLocaleString()}₫</b>
+                {item.selectedSize && (
+                  <span className="item-size">Size: {item.selectedSize}</span>
+                )}
+                <span> {item.selectedSize}</span>
                 <div className="cart-actions">
                   <button
-                    onClick={() => decreaseQuantity(item.id)}
+                    onClick={() => decreaseQuantity(item.cartItemId)}
                     className="reset-button"
                   >
                     -
                   </button>
                   <span> {item.quantity || 1} </span>
                   <button
-                    onClick={() => increaseQuantity(item.id)}
+                    onClick={() => increaseQuantity(item)}
                     className="reset-button"
                   >
                     +
                   </button>
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => handleremoveFromCart(item.cartItemId)}
                     className="reset-button"
                   >
-                    ❌ Xóa tất cả
+                    ❌ Xóa
                   </button>
                   <p>
                     <b>
@@ -89,13 +101,11 @@ const CartPage = () => {
               </div>
             </div>
           ))}
-          <h3>Tổng tiền: {getTotalPrice().toLocaleString()}₫</h3>
-          <button onClick={clearCart} style={{ marginRight: "10px" }}>
+          <h3>Tổng tiền: {cartTotalAmount.toLocaleString()}₫</h3>
+          <button onClick={handleclearCart} style={{ marginRight: "10px" }}>
             🗑 Xóa tất cả
           </button>
-          <button onClick={() => (window.location.href = "/checkout")}>
-            💳 Thanh toán
-          </button>
+          <button onClick={handleCheckout}>💳 Thanh toán</button>
         </div>
       )}
     </div>

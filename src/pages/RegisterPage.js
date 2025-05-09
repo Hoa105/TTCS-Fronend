@@ -44,7 +44,7 @@ const RegisterPage = () => {
     setError(""); // Xóa thông báo lỗi trước đó (nếu có)
 
     try {
-      const response = await fetch("http://localhost:8081/register", {
+      const response = await fetch("http://localhost:8081/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,8 +64,9 @@ const RegisterPage = () => {
       if (response.ok) {
         alert("Đăng ký thành công!");
         localStorage.setItem("token", data.token); // Lưu token vào localStorage (hoặc sessionStorage)
-
+        const userIdFromApi = data.userId || data.id || null;
         const user = {
+          id: userIdFromApi,
           name: fullName,
           username,
           phone,

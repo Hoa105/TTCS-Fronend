@@ -16,9 +16,9 @@ const EditProduct = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`http://localhost:8081/products/${id}`);
-        if (!res.ok) throw new Error("Failed to fetch product");
-        const data = await res.json();
+        const response = await fetch(`http://localhost:8081/products/${id}`);
+
+        const data = await response.json();
 
         const product = data.results;
         if (!product) throw new Error("Product not found");
@@ -61,10 +61,13 @@ const EditProduct = () => {
     formData.append("id", id);
 
     try {
-      const res = await fetch(`http://localhost:8081/update-product/${id}`, {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        `http://localhost:8081/products/update-product/${id}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to update product");
 

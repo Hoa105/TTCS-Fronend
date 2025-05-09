@@ -2,43 +2,28 @@ import React, { useEffect, useState } from "react";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
-  const [error, setError] = useState(null);
-
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch("http://localhost:8081", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to fetch users");
-      }
-
-      const data = await response.json();
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-      }
-
-      setUsers(data.users || []);
-    } catch (err) {
-      console.error(err);
-      setError(err.message);
-    }
-  };
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("http://localhost:8081/users");
+
+        const data = await response.json();
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
+
+        setUsers(data.users || []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
     fetchUsers();
   }, []);
 
   return (
     <div>
       <h2>Users</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
       {users.length > 0 ? (
         <table border="1" cellPadding="8" cellSpacing="0">
           <thead>

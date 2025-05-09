@@ -35,7 +35,7 @@ const ChangeUser = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:8081/update-user/${user.id}`,
+        `http://localhost:8081/users/update-user/${user.id}`,
         {
           method: "POST",
           headers: {

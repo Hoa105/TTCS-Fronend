@@ -5,28 +5,44 @@ import { PrimaryButton } from "./CommonStyled";
 const Products = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-  const [error, setError] = useState("");
 
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch("http://localhost:8081/products", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to fetch products");
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:8081/products");
+        const data = await response.json();
+        setProducts(data.results || []);
+      } catch (err) {
+        console.error(err);
       }
+    };
+    fetchProducts();
+  }, []);
 
-      const data = await response.json();
-      setProducts(data.results || []);
+  const handleFlagChange = async (id, field, value) => {
+    try {
+      const intValue = value === "true" ? 1 : 0; // <-- chuyển "true"/"false" thành 1/0
+
+      const res = await fetch(
+        `http://localhost:8081/products/change-product/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            [field]: intValue, // gửi số 1 hoặc 0
+          }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to update product");
+
+      alert("Product updated successfully!");
+      window.location.reload(); // hoặc fetch lại danh sách
     } catch (err) {
-      console.error(err);
-      setError(err.message);
+      console.error("Error:", err);
+      alert("Failed to update product");
     }
   };
 
@@ -42,7 +58,7 @@ const Products = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8081/delete-product/${id}`,
+        `http://localhost:8081/products/delete-product/${id}`,
         {
           method: "POST",
           headers: {
@@ -57,17 +73,11 @@ const Products = () => {
         throw new Error(errorData.message || "Failed to delete product");
       }
 
-      // Xóa sản phẩm khỏi danh sách sau khi xóa thành công
       setProducts((prev) => prev.filter((prod) => prod.id !== id));
     } catch (err) {
       console.error(err);
-      setError(err.message);
     }
   };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
 
   return (
     <div style={{ padding: "20px", position: "relative" }}>
@@ -83,8 +93,6 @@ const Products = () => {
         </PrimaryButton>
       </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
       {products.length > 0 ? (
         <table border="1" cellPadding="8" cellSpacing="0">
           <thead>
@@ -96,6 +104,11 @@ const Products = () => {
               <th>Material</th>
               <th>Category</th>
               <th>Image</th>
+              <th>Size </th>
+              <th>Quantity</th>
+              <th>Favorite</th>
+              <th>New</th>
+              <th>Sale</th>
               <th>Edit</th>
               <th>Delete</th>
             </tr>
@@ -111,6 +124,118 @@ const Products = () => {
                 <td>{prod.category}</td>
                 <td>
                   <img src={prod.image} alt={prod.name} width="80" />
+                </td>
+                <td>
+                  {Array.isArray(prod.variants) &&
+                  prod.variants.length > 0 &&
+                  prod.variants[0] !== null ? (
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                      {prod.variants.map((variant, index) => (
+                        <li
+                          key={`${prod.id}-size-${variant.size}-${index}`}
+                          style={{
+                            // borderBottom:
+                            //   index < prod.variants.length - 1
+                            //     ? "1px solidrgb(9, 9, 9)"
+                            //     : "none",
+                            // marginBottom: "3px",
+                            lineHeight: "26px" /* Căn chỉnh với input */,
+                          }}
+                        >
+                          {variant.size}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span style={{ color: "#888" }}>N/A</span>
+                  )}
+                </td>
+                {/* Cột Quantity */}
+                <td>
+                  {Array.isArray(prod.variants) &&
+                  prod.variants.length > 0 &&
+                  prod.variants[0] !== null ? (
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                      {prod.variants.map((variant, index) => (
+                        <li
+                          key={`${prod.id}-qty-${variant.size}-${index}`}
+                          style={{ marginBottom: "3px" }}
+                        >
+                          <input
+                            type="number"
+                            min="0"
+                            defaultValue={variant.quantity}
+                            // onBlur={(
+                            //   e // Gọi API khi rời input
+                            // ) =>
+                            //   handleQuantityChange(
+                            //     prod.id,
+                            //     variant.size,
+                            //     e.target.value
+                            //   )
+                            // }
+                            // onKeyDown={(e) => {
+                            //   // Gọi API khi nhấn Enter
+                            //   if (e.key === "Enter") {
+                            //     handleQuantityChange(
+                            //       prod.id,
+                            //       variant.size,
+                            //       e.target.value
+                            //     );
+                            //     e.target.blur(); // Bỏ focus
+                            //   }
+                            // }}
+                            style={{
+                              fontSize: "14px",
+                              width: "90%", // Chiếm gần hết ô
+                              textAlign: "right",
+                              padding: "2px 5px",
+                              boxSizing: "border-box", // Đảm bảo padding không làm tăng kích thước
+                            }}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span style={{ color: "#888" }}>N/A</span>
+                  )}
+                </td>
+
+                <td>
+                  <select
+                    value={prod.isFavorite ? "true" : "false"}
+                    onChange={(e) =>
+                      handleFlagChange(prod.id, "isFavorite", e.target.value)
+                    }
+                    style={{ width: "100px" }}
+                  >
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                  </select>
+                </td>
+                <td>
+                  <select
+                    value={prod.isNew ? "true" : "false"}
+                    onChange={(e) =>
+                      handleFlagChange(prod.id, "isNew", e.target.value)
+                    }
+                    style={{ width: "100px" }}
+                  >
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                  </select>
+                </td>
+                <td>
+                  <select
+                    value={prod.isSale ? "true" : "false"}
+                    onChange={(e) =>
+                      handleFlagChange(prod.id, "isSale", e.target.value)
+                    }
+                    style={{ width: "100px" }}
+                  >
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                  </select>
                 </td>
                 <td>
                   <input
@@ -136,5 +261,4 @@ const Products = () => {
     </div>
   );
 };
-
 export default Products;

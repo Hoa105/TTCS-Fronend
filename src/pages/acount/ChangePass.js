@@ -6,7 +6,6 @@ const ChangePass = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -28,7 +27,6 @@ const ChangePass = () => {
       return;
     }
 
-    setLoading(true);
     setError(""); // Xóa thông báo lỗi trước đó (nếu có)
 
     try {
@@ -39,30 +37,31 @@ const ChangePass = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:8081/change-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Gửi token trong header
-        },
-        body: JSON.stringify({
-          oldPassword,
-          newPassword,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:8081/users/change-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Gửi token trong header
+          },
+          body: JSON.stringify({
+            oldPassword,
+            newPassword,
+          }),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok) {
         alert("Mật khẩu đã được thay đổi thành công!");
-        navigate("/"); // Điều hướng về trang chủ sau khi thay đổi mật khẩu thành công
+        navigate("/");
       } else {
         setError(data.message || "Đổi mật khẩu thất bại!");
       }
     } catch (err) {
       setError("Có lỗi xảy ra. Vui lòng thử lại.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -99,9 +98,7 @@ const ChangePass = () => {
           />
         </div>
         <div className="button-container">
-          <button type="submit" disabled={loading}>
-            {loading ? "Đang thay đổi..." : "Đổi mật khẩu"}
-          </button>
+          <button type="submit">Đổi mật khẩu</button>
           <button onClick={() => navigate("/acount/user")}>Quay lại</button>
         </div>
       </form>

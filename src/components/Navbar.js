@@ -17,15 +17,26 @@ const Navbar = () => {
 
   // Theo dõi location để cập nhật user (tránh cache lỗi)
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    setUser(storedUser || null);
+    const userData = localStorage.getItem("user");
+
+    if (userData && userData !== "undefined") {
+      try {
+        const storedUser = JSON.parse(userData);
+        setUser(storedUser || null);
+      } catch (error) {
+        console.error("Error parsing user from localStorage in Navbar:", error);
+        setUser(null);
+      }
+    } else {
+      setUser(null);
+    }
   }, [location.pathname]);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
 
-    dispatch(setSearchQuery(value)); // 👉 gửi query lên Redux
+    dispatch(setSearchQuery(value)); //  gửi query lên Redux
 
     if (value.trim() !== "") {
       navigate("/search");
@@ -38,7 +49,7 @@ const Navbar = () => {
         <div className="logo-section">
           <h2 className="logo">
             <img src={logo} alt="Logo" className="logo-image" />
-            Velina Jewelry
+            Venila Jewelry
           </h2>
         </div>
         <div className="search-container">
@@ -79,7 +90,6 @@ const Navbar = () => {
 
       <div className="navbar-bottom">
         <NavigationLinks />
-        {/* <p style={{ fontSize: "20px" }}> Liên hệ: 19000000</p> */}
       </div>
     </nav>
   );

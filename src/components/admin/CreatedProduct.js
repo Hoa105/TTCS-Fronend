@@ -33,14 +33,15 @@ const CreateProduct = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:8081/create-product", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "http://localhost:8081/products/create-product",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
-      if (!res.ok) throw new Error("Failed to create product");
-
-      const data = await res.json();
+      const data = await response.json();
       console.log("Product created:", data);
 
       alert("Product created successfully!");

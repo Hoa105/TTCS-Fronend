@@ -1,31 +1,3 @@
-// import React from "react";
-
-// const Footer = () => {
-//   return (
-//     <footer style={styles.footer}>
-//       <p>Welcom to Velina Jewelry Shop. Tất cả quyền được bảo lưu.</p>
-//       <div style={styles.socialLinks}>
-//         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a> |
-//         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"> Instagram</a>
-//       </div>
-//     </footer>
-//   );
-// };
-
-// const styles = {
-//   footer: {
-//     marginTop: "20px",
-//     padding: "10px",
-//     textAlign: "center",
-//     backgroundColor: "#f1f1f1",
-//   },
-//   socialLinks: {
-//     marginTop: "5px",
-//   }
-// };
-
-// export default Footer;
-// import "./Footer.css";
 import "./../assets/css/Footer.css";
 import logo from "../assets/images/logo.png";
 
@@ -41,7 +13,7 @@ const Footer = () => {
         </div>
         <div className="footer-logo">
           <img src={logo} alt="Logo" className="logo-image" />
-          Velina Jewelry
+          Venila Jewelry
         </div>
         <div className="footer-location">
           <i className="fas fa-map-marker-alt"></i>

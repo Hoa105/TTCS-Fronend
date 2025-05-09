@@ -1,10 +1,10 @@
 // import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Shop from "./pages/Shop";
-import ProductDetail from "./pages/ProductDetail";
+import ProductDetail from "./components/ProductDetail";
 import CartPage from "./pages/CartPage";
-import CheckoutPage from "./components/CheckoutPage";
-import SearchResults from "./pages/SearchResults";
+import CheckoutPage from "./pages/CheckoutPage";
+import SearchResults from "./components/SearchResults";
 import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/acount/UserPage";
 import ChangePass from "./pages/acount/ChangePass";
@@ -20,6 +20,7 @@ import CreateProduct from "./components/admin/CreatedProduct";
 import EditProduct from "./components/admin/EditProduct";
 import Users from "./components/admin/Users";
 import Orders from "./components/admin/Oders";
+import OrderDetail from "./components/admin/OrderDetail";
 import "./styles.css";
 import { useLocation } from "react-router-dom";
 
@@ -50,6 +51,7 @@ function App() {
           </Route>
           <Route path="users" element={<Users />} />
           <Route path="orders" element={<Orders />} />
+          <Route path="orders/:id" element={<OrderDetail />} />
         </Route>
       </Routes>
       {!isAdminPage && <Footer />}

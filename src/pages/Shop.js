@@ -1,8 +1,7 @@
 import React from "react";
-import ProductFilter from "../components/ProductFilter";
-import ProductList from "../components/ProductList";
+// import ProductFilter from "../components/ProductFilter";
+// import ProductList from "../components/ProductList";
 import Banner from "../components/Banner";
-// import JewelryFilter from "../components/JewelryFilter";
 
 const Shop = () => {
   return (
@@ -10,8 +9,8 @@ const Shop = () => {
       <Banner />
       {/* <h1> Cửa hàng</h1> */}
       {/* <JewelryFilter />  */}
-      <ProductFilter />
-      <ProductList />
+      {/* <ProductFilter />
+      <ProductList /> */}
     </div>
   );
 };
