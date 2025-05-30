@@ -34,8 +34,6 @@ const Orders = () => {
 
       if (response.ok) {
         alert("Cập nhật trạng thái thành công!");
-
-        // Cập nhật lại danh sách đơn hàng sau khi update
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
             order.id === orderId ? { ...order, status: newStatus } : order

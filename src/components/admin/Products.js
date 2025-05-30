@@ -6,16 +6,17 @@ const Products = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
 
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("http://localhost:8081/products");
+      const data = await response.json();
+      setProducts(data.results || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("http://localhost:8081/products");
-        const data = await response.json();
-        setProducts(data.results || []);
-      } catch (err) {
-        console.error(err);
-      }
-    };
     fetchProducts();
   }, []);
 
@@ -73,7 +74,8 @@ const Products = () => {
         throw new Error(errorData.message || "Failed to delete product");
       }
 
-      setProducts((prev) => prev.filter((prod) => prod.id !== id));
+      alert("Product deleted successfully!");
+      fetchProducts();
     } catch (err) {
       console.error(err);
     }
@@ -85,7 +87,13 @@ const Products = () => {
       <h2>Products</h2>
 
       {/* Nút Create ở góc phải */}
-      <div style={{ position: "absolute", top: "20px", right: "20px" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: "20px",
+          right: "20px",
+        }}
+      >
         <PrimaryButton
           onClick={() => navigate("/admin/products/create-product")}
         >
@@ -119,7 +127,7 @@ const Products = () => {
                 <td>{prod.id}</td>
                 <td>{prod.name}</td>
                 <td>{prod.description}</td>
-                <td>{prod.price}</td>
+                <td>{prod.price.toLocaleString()}</td>
                 <td>{prod.material}</td>
                 <td>{prod.category}</td>
                 <td>
@@ -134,12 +142,7 @@ const Products = () => {
                         <li
                           key={`${prod.id}-size-${variant.size}-${index}`}
                           style={{
-                            // borderBottom:
-                            //   index < prod.variants.length - 1
-                            //     ? "1px solidrgb(9, 9, 9)"
-                            //     : "none",
-                            // marginBottom: "3px",
-                            lineHeight: "26px" /* Căn chỉnh với input */,
+                            lineHeight: "26px",
                           }}
                         >
                           {variant.size}
@@ -163,31 +166,11 @@ const Products = () => {
                         >
                           <input
                             type="number"
-                            min="0"
                             defaultValue={variant.quantity}
-                            // onBlur={(
-                            //   e // Gọi API khi rời input
-                            // ) =>
-                            //   handleQuantityChange(
-                            //     prod.id,
-                            //     variant.size,
-                            //     e.target.value
-                            //   )
-                            // }
-                            // onKeyDown={(e) => {
-                            //   // Gọi API khi nhấn Enter
-                            //   if (e.key === "Enter") {
-                            //     handleQuantityChange(
-                            //       prod.id,
-                            //       variant.size,
-                            //       e.target.value
-                            //     );
-                            //     e.target.blur(); // Bỏ focus
-                            //   }
-                            // }}
+                            readOnly
                             style={{
                               fontSize: "14px",
-                              width: "90%", // Chiếm gần hết ô
+                              width: "90%",
                               textAlign: "right",
                               padding: "2px 5px",
                               boxSizing: "border-box", // Đảm bảo padding không làm tăng kích thước

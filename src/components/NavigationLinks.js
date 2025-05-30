@@ -1,4 +1,3 @@
-// src/components/NavigationLinks.js
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "./../assets/css/Nav.css";
@@ -41,7 +40,6 @@ const styles = {
     textDecoration: "none",
     color: "#846947",
     fontSize: "23px",
-    // fontWeight: "bold",
   },
 };
 

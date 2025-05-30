@@ -1,4 +1,3 @@
-// import styled from "styled-components";
 import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import logo from "../../assets/images/logo.png";
@@ -14,7 +13,6 @@ const Dashboard = () => {
   if (!isAdmin) return <p>Access denied. Not an Admin!</p>;
 
   const handleLogout = () => {
-    // dispatch(logoutUser());
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     navigate("/");
@@ -68,6 +66,15 @@ const Dashboard = () => {
           >
             Users
           </NavLink>
+          <NavLink
+            className={({ isActive }) =>
+              isActive ? "link-active" : "link-inactive"
+            }
+            to="/admin/contacts"
+            style={styles.link}
+          >
+            Contacts
+          </NavLink>
           <button onClick={handleLogout}>Logout</button>
         </div>
       </nav>
@@ -81,12 +88,6 @@ const Dashboard = () => {
         <Outlet />
       </div>
     </div>
-
-    //  </SideNav>
-    //   <Content>
-    //     <Outlet />
-    //   </Content>
-    // </StyledDashboard>
   );
 };
 const styles = {

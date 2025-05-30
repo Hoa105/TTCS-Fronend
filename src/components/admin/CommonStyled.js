@@ -10,8 +10,8 @@ export const PrimaryButton = styled.button`
   border-radius: 5px;
   font-weight: 400;
   letter-spacing: 1.15px;
-  background-color: #4b70e2;
-  color: #f9f9f9;
+  background-color: #e3e3c0;
+  color: rgb(0, 0, 0);
   border: none;
   outline: none;
   cursor: pointer;

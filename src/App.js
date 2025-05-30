@@ -1,7 +1,7 @@
-// import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Shop from "./pages/Shop";
 import ProductDetail from "./components/ProductDetail";
+import RingSizeGuide from "./components/RingSizeGuide";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import SearchResults from "./components/SearchResults";
@@ -12,7 +12,6 @@ import ChangeUser from "./pages/acount/ChangeUser";
 import RegisterPage from "./pages/RegisterPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-// import { ProductProvider } from "./context/ProductContext"; // Import Provider
 import Dashboard from "./components/admin/Dashboad";
 import Summary from "./components/admin/Summary";
 import Products from "./components/admin/Products";
@@ -21,6 +20,7 @@ import EditProduct from "./components/admin/EditProduct";
 import Users from "./components/admin/Users";
 import Orders from "./components/admin/Oders";
 import OrderDetail from "./components/admin/OrderDetail";
+import AdminFeedback from "./components/admin/AdminFeedback";
 import "./styles.css";
 import { useLocation } from "react-router-dom";
 
@@ -29,12 +29,12 @@ function App() {
   const isAdminPage = location.pathname.startsWith("/admin");
 
   return (
-    // <ProductProvider>
     <>
       {!isAdminPage && <Navbar />}
       <Routes>
         <Route path="/" element={<Shop />} />
         <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/ring-size-guide" element={<RingSizeGuide />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/search" element={<SearchResults />} />
@@ -52,11 +52,11 @@ function App() {
           <Route path="users" element={<Users />} />
           <Route path="orders" element={<Orders />} />
           <Route path="orders/:id" element={<OrderDetail />} />
+          <Route path="contacts" element={<AdminFeedback />} />
         </Route>
       </Routes>
       {!isAdminPage && <Footer />}
     </>
-    // </ProductProvider>
   );
 }
 

@@ -27,8 +27,7 @@ const ChangePass = () => {
       return;
     }
 
-    setError(""); // Xóa thông báo lỗi trước đó (nếu có)
-
+    setError("");
     try {
       const token = localStorage.getItem("token");
 

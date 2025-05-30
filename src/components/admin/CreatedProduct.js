@@ -8,6 +8,14 @@ const CreateProduct = () => {
   const [price, setPrice] = useState("");
   const [material, setMaterial] = useState("");
   const [category, setCategory] = useState("");
+  const [hasSizes, setHasSizes] = useState(true);
+  const [sizes, setSizes] = useState([
+    { size: "1.5", quantity: 0 },
+    { size: "1.6", quantity: 0 },
+    { size: "1.7", quantity: 0 },
+    { size: "1.8", quantity: 0 },
+    { size: "1.9", quantity: 0 },
+  ]);
   const navigate = useNavigate();
 
   const handleProductImageUpload = (e) => {
@@ -19,6 +27,21 @@ const CreateProduct = () => {
     }
   };
 
+  const handleSizeChange = (index, field, value) => {
+    const updatedSizes = [...sizes];
+    updatedSizes[index][field] = value;
+    setSizes(updatedSizes);
+  };
+
+  const addSizeField = () => {
+    setSizes([...sizes, { size: "", quantity: "" }]);
+  };
+
+  const removeSizeField = (index) => {
+    const updatedSizes = sizes.filter((_, i) => i !== index);
+    setSizes(updatedSizes);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -28,8 +51,19 @@ const CreateProduct = () => {
     formData.append("price", price);
     formData.append("material", material);
     formData.append("category", category);
+
+    if (hasSizes) {
+      formData.append("sizes", JSON.stringify(sizes));
+    } else {
+      formData.append("sizes", JSON.stringify([]));
+    }
+
     if (productImg) {
-      formData.append("image", productImg); // append image file directly
+      formData.append("image", productImg);
+    }
+    console.log(formData);
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
     }
 
     try {
@@ -40,9 +74,9 @@ const CreateProduct = () => {
           body: formData,
         }
       );
-
-      const data = await response.json();
-      console.log("Product created:", data);
+      if (!response.ok) {
+        throw new Error("Failed to create product");
+      }
 
       alert("Product created successfully!");
       navigate("/admin/products");
@@ -53,7 +87,12 @@ const CreateProduct = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+      }}
+    >
       <form onSubmit={handleSubmit} className="style">
         <h3>Create a Product</h3>
 
@@ -88,7 +127,7 @@ const CreateProduct = () => {
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           required
-          style={{ width: "400", height: "50px" }}
+          style={{ width: "400px", height: "50px" }}
         >
           <option value="">Select Category</option>
           <option value="nhẫn">Nhẫn</option>
@@ -102,13 +141,69 @@ const CreateProduct = () => {
           value={material}
           onChange={(e) => setMaterial(e.target.value)}
           required
-          style={{ width: "400", height: "50px" }}
+          style={{ width: "400px", height: "50px" }}
         >
           <option value="">Select Material</option>
           <option value="vàng">Vàng</option>
           <option value="bạc">Bạc</option>
           <option value="kim cương">Kim cương</option>
         </select>
+        <br />
+
+        <div style={{ marginBottom: "-55px" }}>
+          <label>
+            <input
+              type="checkbox"
+              checked={hasSizes}
+              onChange={(e) => setHasSizes(e.target.checked)}
+              style={{ width: "20px" }}
+            />
+            Sản phẩm có size
+          </label>
+        </div>
+
+        {hasSizes && (
+          <>
+            <h4 style={{ marginBottom: "-20px" }}>Sizes and Quantities</h4>
+            {sizes.map((size, index) => (
+              <div key={index}>
+                <input
+                  type="text"
+                  placeholder="Size"
+                  value={size.size}
+                  onChange={(e) =>
+                    handleSizeChange(index, "size", e.target.value)
+                  }
+                  required
+                  style={{ marginRight: "10px", width: "100px" }}
+                />
+                <input
+                  type="number"
+                  placeholder="Quantity"
+                  value={size.quantity}
+                  onChange={(e) =>
+                    handleSizeChange(index, "quantity", e.target.value)
+                  }
+                  required
+                  style={{ marginRight: "10px", width: "100px" }}
+                />
+                <input
+                  type="button"
+                  value="❌"
+                  onClick={() => removeSizeField(index)}
+                  style={{
+                    backgroundColor: "white",
+                    cursor: "pointer",
+                    width: "100px",
+                  }}
+                />
+              </div>
+            ))}
+            <button type="button" onClick={addSizeField}>
+              ➕ Add Size
+            </button>
+          </>
+        )}
         <br />
 
         <input

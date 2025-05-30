@@ -1,5 +1,3 @@
-/* Navbar.css */
-
 .navbar {
   display: flex;
   flex-direction: column;
@@ -25,18 +23,18 @@
 .logo-section {
   display: flex;
   align-items: center;
-  gap: 10px; /* Increased gap */
+  gap: 10px;
 }
 
 .logo {
   text-decoration: none;
   color: #846947;
   margin: 0;
-  font-size: 40px; /* Reduced size */
+  font-size: 40px;
   display: flex;
   align-items: center;
   font-weight: bold;
-  transition: font-size 0.3s ease; /* Smooth transition for font size */
+  transition: font-size 0.3s ease;
 }
 
 .logo-image {
@@ -58,11 +56,6 @@
   text-decoration: none;
   color: inherit;
 }
-/* .search-login {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  } */
 
 .search-container {
   display: flex;
@@ -76,12 +69,12 @@
 }
 
 .search-input {
-  padding: 10px; /* Reduced padding */
+  padding: 10px;
   width: 100%;
   border: none;
-  font-size: 16px; /* Reduced font size */
+  font-size: 16px;
   background: transparent;
-  outline: none; /* Remove focus outline */
+  outline: none;
 }
 
 .search-button {
@@ -104,32 +97,31 @@
 
 .nav-links a {
   text-decoration: none;
-  color: #333; /* Darker color */
-  font-weight: 500; /* Slightly less bold */
-  font-size: 16px; /* Reduced font size */
+  color: #333;
+  font-weight: 500;
+  font-size: 16px;
   display: flex;
   align-items: center;
   gap: 5px;
-  transition: color 0.3s ease; /* Smooth hover effect */
+  transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
-  color: #846947; /* Highlight on hover */
+  color: #846947;
 }
 
 .cart-link {
   text-decoration: none;
-  color: #333; /* Darker color */
-  font-weight: 600; /* Slightly bolder */
-  font-size: 16px; /* Slightly smaller */
+  color: #333;
+  font-weight: 600;
+  font-size: 16px;
   display: flex;
   align-items: center;
   gap: 5px;
-  transition: color 0.3s ease; /* Smooth hover effect */
+  transition: color 0.3s ease;
 }
-
 .cart-link:hover {
-  color: #846947; /* Highlight on hover */
+  color: #846947;
 }
 
 .user-section {
@@ -144,11 +136,10 @@
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  transition: background-color 0.3s ease; /* Smooth hover effect */
+  transition: background-color 0.3s ease;
 }
-
 .logout-button:hover {
-  background-color: #c82333; /* Darker red on hover */
+  background-color: #c82333;
 }
 .navbar-bottom {
   display: flex;
@@ -220,9 +211,6 @@
     gap: 10px;
   }
 
-  /* .right-section {
-        justify-content: flex-end; /* Maintain right alignment */
-  /* } */
   */ .search-container {
     width: 100%;
     margin-left: 0;

@@ -32,11 +32,17 @@ const SearchResults = () => {
     }
   }, [dispatch, status]);
 
-  // Lọc sản phẩm khi có thay đổi về dữ liệu hoặc bộ lọc
+  const removeAccents = (str) => {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D");
+  };
+
   useEffect(() => {
     let updatedProducts = items;
 
-    // Lọc theo category
     if (filterCategory) {
       updatedProducts = updatedProducts.filter(
         (product) => product.category === filterCategory
@@ -45,8 +51,9 @@ const SearchResults = () => {
 
     // Lọc theo tên sản phẩm
     if (searchQuery && searchQuery.trim()) {
+      const normalizedQuery = removeAccents(searchQuery.toLowerCase());
       updatedProducts = updatedProducts.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        removeAccents(product.name.toLowerCase()).includes(normalizedQuery)
       );
     }
 
@@ -72,7 +79,6 @@ const SearchResults = () => {
     <div>
       <ProductFilter />
 
-      {/* Hiển thị kết quả */}
       {status === "loading" && <p>Đang tải sản phẩm...</p>}
       {status === "failed" && <p>{error}</p>}
       {status === "succeeded" && <ProductList products={filteredProducts} />}

@@ -25,17 +25,17 @@ export const productsFetch = createAsyncThunk(
 const productsSlice = createSlice({
   name: "products",
   initialState: {
-    items: [], // Danh sách sản phẩm
-    status: "idle", // Trạng thái tải
-    error: null, // Lỗi nếu có
-    cart: JSON.parse(localStorage.getItem("cart")) || [], // Giỏ hàng
-    searchQuery: "", // Từ khóa tìm kiếm
-    selectedCategory: "Tất cả", // Danh mục chọn
-    selectedFavorite: "Tất cả", // Yêu thích chọn
-    selectedNew: "Tất cả", // Mới chọn
-    selectedSale: "Tất cả", // Giảm giá chọn
-    selectedMaterial: "Tất cả", // Chất liệu chọn
-    priceRange: [0, 200000000], // Khoảng giá
+    items: [],
+    status: "idle",
+    error: null,
+    cart: JSON.parse(localStorage.getItem("cart")) || [],
+    searchQuery: "",
+    selectedCategory: "Tất cả",
+    selectedFavorite: "Tất cả",
+    selectedNew: "Tất cả",
+    selectedSale: "Tất cả",
+    selectedMaterial: "Tất cả",
+    priceRange: [0, 200000000],
   },
   reducers: {
     setSelectedCategory: (state, action) => {
@@ -69,16 +69,14 @@ const productsSlice = createSlice({
         if (state.status === "idle") {
           state.status = "loading";
         }
-        // state.status = "loading"; // Đang tải
-        // state.error = null; // Xóa lỗi khi đang tải
       })
       .addCase(productsFetch.fulfilled, (state, action) => {
-        state.status = "succeeded"; // Thành công
-        state.items = action.payload; // Lưu sản phẩm
+        state.status = "succeeded";
+        state.items = action.payload;
       })
       .addCase(productsFetch.rejected, (state, action) => {
-        state.status = "failed"; // Lỗi
-        state.error = action.payload || "Lỗi không xác định"; // Hiển thị lỗi
+        state.status = "failed";
+        state.error = action.payload || "Lỗi không xác định";
       });
   },
 });

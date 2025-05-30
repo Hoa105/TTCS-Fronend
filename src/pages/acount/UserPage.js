@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../../assets/css/Acount.css";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { clearCart, setCartItems } from "../../slices/cartSilce";
+import { clearCart, setCartItems } from "../../slices/cartSlice";
 
 const UserPage = () => {
   const [activeTab, setActiveTab] = useState("info");
@@ -41,7 +41,7 @@ const UserPage = () => {
       const response = await fetch(`http://localhost:8081/orders/${id}`);
 
       const data = await response.json();
-      setSelectedOrder(data.items); // data có cả thông tin đơn + items
+      setSelectedOrder(data.items);
     } catch (err) {
       console.error("Lỗi khi lấy chi tiết đơn hàng:", err);
       alert("Không thể tải dữ liệu đơn hàng");
@@ -52,9 +52,7 @@ const UserPage = () => {
     localStorage.removeItem("user");
     setUser(null);
     dispatch(clearCart()); // Xóa giỏ hàng trong Redux và localStorage (lưu mảng rỗng vào key user cũ)
-    //   // Sau đó xóa thông tin user, token...
 
-    //   // Tùy chọn: Tải lại giỏ hàng guest nếu muốn hiển thị ngay sau logout
     const guestCartData = localStorage.getItem("cart_guest");
     dispatch(setCartItems(guestCartData ? JSON.parse(guestCartData) : []));
     navigate("/");

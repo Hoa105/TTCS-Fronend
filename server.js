@@ -4,7 +4,7 @@ const WebSocket = require("ws");
 const cors = require("cors");
 
 const app = express();
-app.use(cors()); // Cho phép CORS để tránh lỗi khi gọi API từ React
+app.use(cors());
 
 // Tạo server HTTP
 const server = http.createServer(app);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setCartItems } from "../slices/cartSilce";
+import { setCartItems } from "../slices/cartSlice";
 import { toast } from "react-toastify";
 
 const LoginPage = () => {
@@ -16,19 +16,15 @@ const LoginPage = () => {
     const guestCartKey = "cart_guest";
     const userCartKey = `cart_${userId}`;
 
-    // Get user's saved cart (if any)
     const userCartData = localStorage.getItem(userCartKey);
-    // const userCart = userCartData ? JSON.parse(userCartData) : [];
 
     let finalCart = [];
 
     if (userCartData) {
       try {
         finalCart = JSON.parse(userCartData);
-        console.log("Loading saved user cart:", finalCart);
       } catch (err) {
         console.error("Error parsing user cart from localStorage:", err);
-        // Nếu lỗi parse, coi như giỏ hàng trống
         finalCart = [];
       }
     } else {
@@ -62,7 +58,6 @@ const LoginPage = () => {
         );
       }
 
-      // Xử lý phản hồi từ API khi đăng nhập thành công
       const data = await response.json();
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
@@ -92,6 +87,7 @@ const LoginPage = () => {
             type="email"
             placeholder="Email"
             value={email}
+            autoComplete="email"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -102,6 +98,7 @@ const LoginPage = () => {
             type="password"
             placeholder="Mật khẩu"
             value={password}
+            autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
             required
           />

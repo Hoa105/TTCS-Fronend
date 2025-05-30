@@ -54,6 +54,7 @@ const OrderDetail = () => {
             <tr>
               <th>Hình ảnh</th>
               <th>Tên sản phẩm</th>
+              <th>Size</th>
               <th>Số lượng</th>
               <th>Giá cả</th>
             </tr>
@@ -69,6 +70,7 @@ const OrderDetail = () => {
                   />
                 </td>
                 <td>{item.product_name}</td>
+                <td>{item.size}</td>
                 <td>{item.quantity}</td>
                 <td>{item.price.toLocaleString()} VND</td>
               </tr>

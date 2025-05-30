@@ -1,8 +1,6 @@
-// src/slices/cartSilce.js
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
-// --- Các hàm helper (getUserId, getCartStorageKey, loadCartFromStorage, saveCartToStorage) giữ nguyên ---
 function getUserId() {
   const userData = localStorage.getItem("user");
   if (!userData || userData === "undefined") return null;
@@ -24,7 +22,6 @@ const loadCartFromStorage = () => {
   const key = getCartStorageKey();
   try {
     const cartData = localStorage.getItem(key);
-    // Đảm bảo các item tải lên có maxQuantity nếu trước đó lưu thiếu
     const parsedCart = cartData ? JSON.parse(cartData) : [];
     return parsedCart.map((item) => ({
       ...item,
@@ -45,9 +42,7 @@ const saveCartToStorage = (cart) => {
     console.error("Error saving cart to localStorage:", error);
   }
 };
-// --- Kết thúc hàm helper ---
 
-// Hàm tính toán tổng tiền và số lượng
 const calculateTotals = (cart) => {
   let total = 0;
   let quantity = 0;
@@ -81,77 +76,38 @@ const cartSlice = createSlice({
       state.cartTotalAmount = totals.total;
       saveCartToStorage(state.cart);
     },
-    // addToCart xử lý cả việc thêm mới và tăng số lượng
     addToCart(state, action) {
-      // Payload là đối tượng productToAdd từ ProductDetail
-      // { id, name, price, image, selectedSize, quantity: 1, maxQuantity, cartItemId }
       const newItem = action.payload;
 
-      // Tìm item bằng cartItemId (id-size)
+      // Tìm sản phẩm trong giỏ hàng dựa trên cartItemId
       const existingIndex = state.cart.findIndex(
         (item) => item.cartItemId === newItem.cartItemId
       );
 
       if (existingIndex >= 0) {
-        // Item đã tồn tại, thử tăng số lượng
-        const currentItem = state.cart[existingIndex];
-        // Kiểm tra với maxQuantity (số lượng tồn kho của size này)
-        if (currentItem.quantity < currentItem.maxQuantity) {
-          currentItem.quantity += 1;
-          toast.info(
-            `Đã tăng số lượng ${currentItem.name} (Size: ${currentItem.selectedSize})`,
-            {
-              position: "bottom-left",
-            }
-          );
-        } else {
-          // Đã đạt giới hạn tồn kho
-          toast.warn(
-            `Số lượng tối đa cho ${currentItem.name} (Size: ${currentItem.selectedSize}) là ${currentItem.maxQuantity}`,
-            {
-              position: "bottom-left",
-            }
-          );
-        }
+        // Nếu sản phẩm đã tồn tại, tăng số lượng
+        state.cart[existingIndex].quantity += newItem.quantity;
+        toast.info(`Đã tăng số lượng ${newItem.name} trong giỏ hàng`, {
+          position: "bottom-left",
+        });
       } else {
-        // Item chưa tồn tại, thêm vào giỏ hàng
-        // Đảm bảo item thêm vào có quantity: 1 và maxQuantity
-        const itemToAdd = {
-          ...newItem,
-          quantity: 1, // Bắt đầu với số lượng 1
-          // maxQuantity nên đã có trong newItem từ ProductDetail
-          maxQuantity: newItem.maxQuantity,
-        };
-        // Kiểm tra lại maxQuantity có tồn tại không
-        if (typeof itemToAdd.maxQuantity === "undefined") {
-          console.error(
-            "maxQuantity bị thiếu khi thêm sản phẩm vào giỏ:",
-            itemToAdd
-          );
-          toast.error(
-            `Lỗi: Không thể thêm ${itemToAdd.name} (Size: ${itemToAdd.selectedSize}) do thiếu thông tin tồn kho.`,
-            { position: "bottom-left" }
-          );
-          return; // Dừng thực thi reducer này
-        }
-
-        state.cart.push(itemToAdd);
-        toast.success(
-          `${itemToAdd.name} (Size: ${itemToAdd.selectedSize}) đã được thêm vào giỏ`,
-          {
-            position: "bottom-left",
-          }
-        );
+        // Nếu sản phẩm chưa tồn tại, thêm vào giỏ hàng
+        state.cart.push(newItem);
+        toast.success(`${newItem.name} đã được thêm vào giỏ hàng`, {
+          position: "bottom-left",
+        });
       }
-      // Tính lại tổng và lưu
+
+      // Tính lại tổng số lượng và tổng tiền
       const totals = calculateTotals(state.cart);
       state.cartTotalQuantity = totals.quantity;
       state.cartTotalAmount = totals.total;
       saveCartToStorage(state.cart);
     },
+
     decreaseCart(state, action) {
-      // Payload là { cartItemId: '...' }
       const { cartItemId } = action.payload;
+      console.log("Giảm số lượng cho item:", cartItemId);
       const itemIndex = state.cart.findIndex(
         (item) => item.cartItemId === cartItemId
       );
@@ -188,7 +144,6 @@ const cartSlice = createSlice({
       }
     },
     removeFromCart(state, action) {
-      // Payload là { cartItemId: '...' }
       const { cartItemId } = action.payload;
       const initialLength = state.cart.length;
       let removedItemName = "";
@@ -204,14 +159,13 @@ const cartSlice = createSlice({
       });
 
       if (state.cart.length < initialLength) {
-        // Chỉ thông báo khi thực sự xóa
         toast.error(
           `${removedItemName} (Size: ${removedItemSize}) đã bị xóa khỏi giỏ`,
           {
             position: "bottom-left",
           }
         );
-        // Tính lại tổng và lưu
+
         const totals = calculateTotals(state.cart);
         state.cartTotalQuantity = totals.quantity;
         state.cartTotalAmount = totals.total;

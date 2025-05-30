@@ -9,15 +9,14 @@ const EditProduct = () => {
   const [price, setPrice] = useState("");
   const [material, setMaterial] = useState("");
   const [category, setCategory] = useState("");
+  const [sizes, setSizes] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // Fetch existing product info
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await fetch(`http://localhost:8081/products/${id}`);
-
         const data = await response.json();
 
         const product = data.results;
@@ -29,6 +28,7 @@ const EditProduct = () => {
         setMaterial(product.material || "");
         setCategory(product.category || "");
         setPreviewImg(product.image || null);
+        setSizes(product.variants || []);
       } catch (err) {
         console.error(err);
         alert("Error loading product data");
@@ -46,6 +46,21 @@ const EditProduct = () => {
     }
   };
 
+  const handleSizeChange = (index, field, value) => {
+    const updatedSizes = [...sizes];
+    updatedSizes[index][field] = value;
+    setSizes(updatedSizes);
+  };
+
+  const addSizeField = () => {
+    setSizes([...sizes, { size: "", quantity: "" }]);
+  };
+
+  const removeSizeField = (index) => {
+    const updatedSizes = sizes.filter((_, i) => i !== index);
+    setSizes(updatedSizes);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -55,6 +70,7 @@ const EditProduct = () => {
     formData.append("price", price);
     formData.append("material", material);
     formData.append("category", category);
+    formData.append("sizes", JSON.stringify(sizes));
     if (productImg) {
       formData.append("image", productImg);
     }
@@ -70,9 +86,6 @@ const EditProduct = () => {
       );
 
       if (!res.ok) throw new Error("Failed to update product");
-
-      const data = await res.json();
-      console.log("Product updated:", data);
 
       alert("Product updated successfully!");
       navigate("/admin/products");
@@ -139,6 +152,58 @@ const EditProduct = () => {
           <option value="bạc">Bạc</option>
           <option value="kim cương">Kim cương</option>
         </select>
+        <br />
+
+        <h4>Sizes and Quantities</h4>
+        {sizes.map((size, index) => (
+          <div
+            key={index}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "10px",
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Size"
+              value={size.size}
+              onChange={(e) => handleSizeChange(index, "size", e.target.value)}
+              required
+              style={{ marginRight: "10px", width: "100px" }}
+            />
+            <input
+              type="number"
+              placeholder="Quantity"
+              value={size.quantity}
+              onChange={(e) =>
+                handleSizeChange(index, "quantity", e.target.value)
+              }
+              required
+              style={{ marginRight: "10px", width: "100px" }}
+            />
+            <input
+              type="button"
+              value="❌"
+              onClick={() => removeSizeField(index)}
+              style={{
+                backgroundColor: "white",
+                cursor: "pointer",
+              }}
+            />
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={addSizeField}
+          style={{
+            border: "none",
+            padding: "5px 10px",
+            cursor: "pointer",
+          }}
+        >
+          ➕ Add Size
+        </button>
         <br />
 
         <input

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setCartItems } from "../slices/cartSilce";
+import { setCartItems } from "../slices/cartSlice";
 
 const CheckoutPage = () => {
   const dispatch = useDispatch();
@@ -62,6 +62,7 @@ const CheckoutPage = () => {
               product_id: item.id,
               quantity: item.quantity,
               price: item.price,
+              size: item.selectedSize,
             })),
           }),
         }
